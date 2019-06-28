@@ -448,7 +448,8 @@
             custom.ext = [NSString stringWithFormat:@"您所在的群已解散"];
             [tip addElem:custom];
             TIMConversation *conv = [[TIMManager sharedInstance] getConversation:TIM_GROUP receiver:self.groupId];
-            [conv saveMessage:tip sender:nil isReaded:YES];
+            //[conv saveMessage:tip sender:nil isReaded:YES];
+            [conv sendMessage:tip succ:nil fail:nil];
             
             [[TIMGroupManager sharedInstance] deleteGroup:self.groupId succ:^{
                 dispatch_async(dispatch_get_main_queue(), ^{

@@ -165,6 +165,8 @@
             data.reuseId = @"ButtonCell";
             data;
         })];
+        if(!self.isInBlackList){
+            
         [inlist addObject:({
             TUIButtonCellData *data = TUIButtonCellData.new;
             data.title = @"删除好友";
@@ -173,8 +175,12 @@
             data.reuseId = @"ButtonCell";
             data;
         })];
+            
+        }
+    
         inlist;
     })];
+
     
     self.dataList = list;
     [self.tableView reloadData];
@@ -281,15 +287,24 @@
 
 
 - (void)didConfirmDelete{
+    NSLog(@"Delete Begin.");
     [[TIMFriendshipManager sharedInstance] deleteFriends:@[self.friendProfile.identifier] delType:TIM_FRIEND_DEL_BOTH succ:^(NSArray<TIMFriendResult *> *results) {
         TIMFriendResult *result = results.firstObject;
         if (result.result_code == 0) {
             self.modified = YES;
             [self.navigationController popViewControllerAnimated:YES];
+            NSLog(@"Delete Success.");
         }
     } fail:^(int code, NSString *msg) {
-        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"删除失败\n好友不存在或已经删除" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            //确定后不进行任何操作
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+        NSLog(@"Delete Fail.");
+
     }];
+     NSLog(@"Delete End.");
 }
 
 @end
