@@ -35,7 +35,7 @@
     _userName  = _userNames[0];
     _userSig   = _userSigs[0];
     
-    UserSelectView *view = [[UserSelectView alloc] initWithFrame:CGRectMake(self.userNameLabel.frame.origin.x + self.userNameLabel.frame.size.width + 15, [self isiPhoneX] ? self.userNameLabel.frame.origin.y + 20 : self.userNameLabel.frame.origin.y, 200, 30)];
+    UserSelectView *view = [[UserSelectView alloc] initWithFrame:CGRectMake(self.userNameLabel.frame.origin.x + self.userNameLabel.frame.size.width + 15, [self isiPhoneX] ? self.userNameLabel.frame.origin.y + 20 : self.userNameLabel.frame.origin.y, 200, 30)    defaultUser:_userName];
     view.dataSource = _userNames;
     view.delegate = self;
     [self.view addSubview:view];

@@ -236,15 +236,27 @@
      
 - (void)onDeleteFriend:(id)sender
 {
-    [[TIMFriendshipManager sharedInstance] deleteFriends:@[self.friendProfile.identifier] delType:TIM_FRIEND_DEL_BOTH succ:^(NSArray<TIMFriendResult *> *results) {
-        TIMFriendResult *result = results.firstObject;
-        if (result.result_code == 0) {
-            self.modified = YES;
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-    } fail:^(int code, NSString *msg) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确定要删除好友吗" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
-    }];
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self didConfirmDelete];
+    }]];
+    [self presentViewController:alert animated:YES completion:nil];
+    /**
+     ******* 添加了alertView来确认，防止误触 *******
+     ******* 原来的代码封装到了didcConfirmDelete中 *******
+     [[TIMFriendshipManager sharedInstance] deleteFriends:@[self.friendProfile.identifier] delType:TIM_FRIEND_DEL_BOTH succ:^(NSArray<TIMFriendResult *> *results) {
+     TIMFriendResult *result = results.firstObject;
+     if (result.result_code == 0) {
+     self.modified = YES;
+     [self.navigationController popViewControllerAnimated:YES];
+     }
+     } fail:^(int code, NSString *msg) {
+     
+     }];
+     */
 }
 
 - (void)onSendMessage:(id)sender
@@ -266,4 +278,18 @@
         [[TUILocalStorage sharedInstance] removeTopConversation:self.friendProfile.identifier];
     }
 }
+
+
+- (void)didConfirmDelete{
+    [[TIMFriendshipManager sharedInstance] deleteFriends:@[self.friendProfile.identifier] delType:TIM_FRIEND_DEL_BOTH succ:^(NSArray<TIMFriendResult *> *results) {
+        TIMFriendResult *result = results.firstObject;
+        if (result.result_code == 0) {
+            self.modified = YES;
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    } fail:^(int code, NSString *msg) {
+        
+    }];
+}
+
 @end

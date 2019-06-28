@@ -145,12 +145,26 @@ static CGFloat const rowheight = 42;
     }
 }
 
+
+
+- (instancetype)initWithFrame:(CGRect) rect defaultUser:(NSString *)name{
+    if(self = [super initWithFrame:rect]){
+        self.firstUserName = name;
+        [self setUI];
+    }
+    return self;
+}
+
+
+
 #pragma mark getter && setter
 
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [UILabel new];
-        _titleLabel.text = @"User1";
+        if(self.firstUserName){
+            _titleLabel.text = self.firstUserName;
+        }else _titleLabel.text = @"User1";
         _titleLabel.textColor = [UIColor colorWithRed:51.0/255.0 green:51.0/255.0 blue:51.0/255.0 alpha:1];
         _titleLabel.font = [UIFont systemFontOfSize:16];
         _titleLabel.frame = CGRectMake(10, 0, self.frame.size.width - 50, self.frame.size.height);

@@ -61,6 +61,13 @@ IB_DESIGNABLE
 
 - (instancetype)initWithFrame:(CGRect)frame dataSource:(NSArray *)dataSource;
 
+
+@property (nonatomic, strong) NSString *firstUserName;
+/**
+ 在首页初始化第一个demo用户的名字
+ */
+- (instancetype)initWithFrame:(CGRect) rect defaultUser:(NSString *)name;
+
 @end
 
 NS_ASSUME_NONNULL_END
