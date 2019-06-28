@@ -27,6 +27,7 @@
 
 - (void)setupViews
 {
+    //设置页面
     _title = [[UILabel alloc] init];
     _title.font = [UIFont systemFontOfSize:14];
     _title.textColor = [UIColor blackColor];
