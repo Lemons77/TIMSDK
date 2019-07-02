@@ -5,7 +5,12 @@
 //  Created by annidyfeng on 2019/4/29.
 //  Copyright © 2019年 kennethmiao. All rights reserved.
 //
-
+/** 腾讯云IM Demo好友信息视图
+ *  本文件实现了好友简介视图控制器，只在显示好友时使用该视图控制器
+ *  若要显示非好友的用户信息，请查看TUIKitDemo/Chat/TUserProfileController.m
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ */
 #import "TFriendProfileController.h"
 #import "TCommonTextCell.h"
 #import "TCommonSwitchCell.h"
@@ -75,6 +80,9 @@
     self.title = @"详细资料";
 }
 
+/**
+ *初始化视图显示数据
+ */
 - (void)loadData
 {
     NSMutableArray *list = @[].mutableCopy;
@@ -165,8 +173,6 @@
             data.reuseId = @"ButtonCell";
             data;
         })];
-        if(!self.isInBlackList){
-            
         [inlist addObject:({
             TUIButtonCellData *data = TUIButtonCellData.new;
             data.title = @"删除好友";
@@ -175,12 +181,8 @@
             data.reuseId = @"ButtonCell";
             data;
         })];
-            
-        }
-    
         inlist;
     })];
-
     
     self.dataList = list;
     [self.tableView reloadData];
@@ -197,6 +199,10 @@
         } fail:nil];
     }
 }
+
+/**
+ *点击 修改备注 按钮后所执行的函数。包含数据的获取与请求回调
+ */
 - (void)onChangeRemark:(TCommonTextCell *)cell
 {
     TTextEditController *vc = [[TTextEditController alloc] initWithText:self.friendProfile.remark];
@@ -239,32 +245,26 @@
     TCommonCellData *data = self.dataList[indexPath.section][indexPath.row];
     return [data heightOfWidth:Screen_Width];
 }
-     
+
+/**
+ *点击 删除好友 后执行的函数，包括好友信息获取和请求回调
+ */
 - (void)onDeleteFriend:(id)sender
 {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确定要删除好友吗" message:nil preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [[TIMFriendshipManager sharedInstance] deleteFriends:@[self.friendProfile.identifier] delType:TIM_FRIEND_DEL_BOTH succ:^(NSArray<TIMFriendResult *> *results) {
+        TIMFriendResult *result = results.firstObject;
+        if (result.result_code == 0) {
+            self.modified = YES;
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    } fail:^(int code, NSString *msg) {
         
-    }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
-        [self didConfirmDelete];
-    }]];
-    [self presentViewController:alert animated:YES completion:nil];
-    /**
-     ******* 添加了alertView来确认，防止误触 *******
-     ******* 原来的代码封装到了didcConfirmDelete中 *******
-     [[TIMFriendshipManager sharedInstance] deleteFriends:@[self.friendProfile.identifier] delType:TIM_FRIEND_DEL_BOTH succ:^(NSArray<TIMFriendResult *> *results) {
-     TIMFriendResult *result = results.firstObject;
-     if (result.result_code == 0) {
-     self.modified = YES;
-     [self.navigationController popViewControllerAnimated:YES];
-     }
-     } fail:^(int code, NSString *msg) {
-     
-     }];
-     */
+    }];
 }
 
+/**
+ *点击 发送消息 后执行的函数，默认跳转到对应好友的聊天界面
+ */
 - (void)onSendMessage:(id)sender
 {
     TUIConversationCellData *data = [[TUIConversationCellData alloc] init];
@@ -276,6 +276,9 @@
     [self.navigationController pushViewController:chat animated:YES];
 }
 
+/**
+ *操作 置顶 开关后执行的函数，将对应好友添加/移除置顶队列
+ */
 - (void)onTopMostChat:(TCommonSwitchCell *)cell
 {
     if (cell.switcher.on) {
@@ -284,27 +287,4 @@
         [[TUILocalStorage sharedInstance] removeTopConversation:self.friendProfile.identifier];
     }
 }
-
-
-- (void)didConfirmDelete{
-    NSLog(@"Delete Begin.");
-    [[TIMFriendshipManager sharedInstance] deleteFriends:@[self.friendProfile.identifier] delType:TIM_FRIEND_DEL_BOTH succ:^(NSArray<TIMFriendResult *> *results) {
-        TIMFriendResult *result = results.firstObject;
-        if (result.result_code == 0) {
-            self.modified = YES;
-            [self.navigationController popViewControllerAnimated:YES];
-            NSLog(@"Delete Success.");
-        }
-    } fail:^(int code, NSString *msg) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"删除失败\n好友不存在或已经删除" message:nil preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            //确定后不进行任何操作
-        }]];
-        [self presentViewController:alert animated:YES completion:nil];
-        NSLog(@"Delete Fail.");
-
-    }];
-     NSLog(@"Delete End.");
-}
-
 @end

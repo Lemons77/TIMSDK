@@ -5,7 +5,13 @@
 //  Created by kennethmiao on 2018/10/10.
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
-
+/** 腾讯云IM Demo 聊天视图
+ *  本文件实现了聊天视图
+ *  在用户需要收发群组、以及其他用户消息时提供UI
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ *
+ */
 #import "ChatViewController.h"
 #import "GroupInfoController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -63,7 +69,7 @@
 {
     //left    
     
-    //right
+    //right，根据当前聊天页类型设置右侧按钮格式
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
     [rightButton addTarget:self action:@selector(rightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
     if(_conversationData.convType == TIM_C2C){
@@ -81,6 +87,7 @@
 
 - (void)rightBarButtonClick
 {
+    //当前为用户和用户之间通信时，右侧按钮响应为用户信息视图入口
     if (_conversationData.convType == TIM_C2C) {
         @weakify(self)
         [[TIMFriendshipManager sharedInstance] getFriendList:^(NSArray<TIMFriend *> *friends) {
@@ -109,7 +116,7 @@
         }];
         
 
-        
+    //当前为群组通信时，右侧按钮响应为群组信息入口
     } else {
         GroupInfoController *groupInfo = [[GroupInfoController alloc] init];
         groupInfo.groupId = _conversationData.convId;

@@ -206,6 +206,9 @@ void uncaughtExceptionHandler(NSException*exception){
     // Internal error reporting
 }
 
+/**
+ *对页面内控制器进行获取或初始化
+ */
 - (UIViewController *)getLoginController{
     UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     LoginController *login = [board instantiateViewControllerWithIdentifier:@"LoginController"];
@@ -240,6 +243,9 @@ void uncaughtExceptionHandler(NSException*exception){
     return tbc;
 }
 
+/**
+ *针对不同在线状态下的提示视图
+ */
 - (void)onUserStatus:(NSNotification *)notification
 {
     TUIUserStatus status = [notification.object integerValue];
@@ -271,16 +277,17 @@ void uncaughtExceptionHandler(NSException*exception){
 }
 
 
-
 /**
- *强制下线后的响应函数委托
+ *强制下线后，AlertView的响应函数委托
  */
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 0){
+        //点击退出按钮
         UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
         LoginController *login = [board instantiateViewControllerWithIdentifier:@"LoginController"];
         self.window.rootViewController = login;
     }else if(buttonIndex == 1){
+        //点击重新登录按钮
         /****此处未提供reLogin接口，而是直接使用保存在本地的数据登录，仅适用于Demo体验版本****/
         NSNumber *appId = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_Appid];
         NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:Key_UserInfo_User];
@@ -317,7 +324,6 @@ void uncaughtExceptionHandler(NSException*exception){
         }
     }
 }
-
 
 @end
 

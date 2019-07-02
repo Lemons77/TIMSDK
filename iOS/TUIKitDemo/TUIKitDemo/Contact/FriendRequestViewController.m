@@ -5,7 +5,11 @@
 //  Created by annidyfeng on 2019/4/18.
 //  Copyright © 2019年 kennethmiao. All rights reserved.
 //
-
+/** 腾讯云IM Demo 添加好友视图
+ *  本文件实现了添加好友时的视图，在您想要添加其他用户为好友时提供UI
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ */
 #import "FriendRequestViewController.h"
 #import "MMLayout/UIView+MMLayout.h"
 #import "TUIProfileCardCell.h"
@@ -30,6 +34,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //初始化视图内的组件
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     [self.view addSubview:self.tableView];
     self.tableView.frame = self.view.frame;
@@ -84,6 +89,9 @@
 }
 
 #pragma mark - Keyboard
+/**
+ *根据键盘的上浮与下沉，使组件一起浮动，保证视图不被键盘遮挡
+ */
 - (void)adjustContentOffsetDuringKeyboardAppear:(BOOL)appear withNotification:(NSNotification *)notification {
     NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationCurve curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
@@ -137,6 +145,9 @@
     return 1;
 }
 
+/**
+ *初始化tableView的信息单元
+ */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
@@ -176,6 +187,9 @@
     return NO;
 }
 
+/**
+ *发送好友请求，包含请求后的回调
+ */
 - (void)onSend
 {
     [self.view endEditing:YES];
@@ -190,6 +204,7 @@
     req.addSource = @"iOS";
     [[TIMFriendshipManager sharedInstance] addFriend:req succ:^(TIMFriendResult *result) {
         NSString *msg = [NSString stringWithFormat:@"%ld", (long)result.result_code];
+        //根据回调类型向用户展示添加结果
         if (result.result_code == TIM_ADD_FRIEND_STATUS_PENDING) {
             msg = @"发送成功";
         }

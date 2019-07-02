@@ -2,6 +2,14 @@
 #import "UserSelectView.h"
 
 #define WEAKSELF __weak typeof(self) weakSelf = self;
+/** 腾讯云IM Demo 用户选择视图
+ *  本文件实现登录界面的选择用户视图。
+ *  值得注意的是，实际登录模块与Demo中的登录模块有所不同。
+ *  Demo中为了方便用户体验，只需在AppDelegate.h中填用户名和usersig即可（具体获得过程请参照https://github.com/tencentyun/TIMSDK/tree/master/iOS）
+ *  上述github工程的readme文档中详细的介绍了usersig的获取方式
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ */
 
 @interface UserSelectView ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -145,26 +153,13 @@ static CGFloat const rowheight = 42;
     }
 }
 
-
-
-- (instancetype)initWithFrame:(CGRect) rect defaultUser:(NSString *)name{
-    if(self = [super initWithFrame:rect]){
-        self.firstUserName = name;
-        [self setUI];
-    }
-    return self;
-}
-
-
-
 #pragma mark getter && setter
+//setter和getter函数
 
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [UILabel new];
-        if(self.firstUserName){
-            _titleLabel.text = self.firstUserName;
-        }else _titleLabel.text = @"User1";
+        _titleLabel.text = @"User1";
         _titleLabel.textColor = [UIColor colorWithRed:51.0/255.0 green:51.0/255.0 blue:51.0/255.0 alpha:1];
         _titleLabel.font = [UIFont systemFontOfSize:16];
         _titleLabel.frame = CGRectMake(10, 0, self.frame.size.width - 50, self.frame.size.height);

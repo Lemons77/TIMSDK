@@ -5,7 +5,9 @@
 //  Created by dackli on 16/8/4.
 //  Copyright © 2016年 tencent. All rights reserved.
 //
-
+/** 腾讯云IM Demo用户登录信息类
+ *  用来管理用户的登录信息，如登录信息的缓存、过期判断等
+ */
 #import "TCLoginParam.h"
 #import "TCUtil.h"
 
@@ -40,7 +42,9 @@
     return mgr;
 }
 
-
+/**
+ *从本地获取用户登录资料
+ */
 + (instancetype)loadFromLocal {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (defaults == nil) {
@@ -62,6 +66,9 @@
     return [[TCLoginParam alloc] init];
 }
 
+/**
+ *将用户登录资料保存至本地
+ */
 - (void)saveToLocal {
     if (self.tokenTime == 0) {
         self.tokenTime = [[NSDate date] timeIntervalSince1970];
@@ -97,6 +104,10 @@
     [defaults synchronize];
 }
 
+/**
+ *登录身份过期的判断。在Demo中默认登录身份永不过期。
+ *客户也可参照下方函数中的注释代码编写过期判断，根据自己的需求编写过期判断
+ */
 - (BOOL)isExpired {
 //    time_t curTime = [[NSDate date] timeIntervalSince1970];
 //    if (curTime - self.tokenTime > 10 * 24 * 3600) {
@@ -105,6 +116,9 @@
     return NO;
 }
 
+/**
+ *判断登录信息是否有效
+ */
 - (BOOL)isValid {
     if (self.identifier == nil || self.identifier.length == 0) {
         return NO;

@@ -5,7 +5,13 @@
 //  Created by kennethmiao on 2018/10/19.
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
-
+/** 腾讯云IM Demo 设置主界面视图
+ *  本文件实现了设置视图控制器，即TabBar内 "我" 按钮对应的视图
+ *
+ *  您可以在此处查看、并修改您的个人信息，或是执行退出登录等操作
+ *
+ *  本类依赖于腾讯云 TUIKit和IMSDK 实现
+ */
 #import "SettingController.h"
 #import "LoginController.h"
 #import "AppDelegate.h"
@@ -47,6 +53,9 @@
     return shareInstance;
 }
 
+/**
+ *获取签名
+ */
 - (NSString *)getSignature:(TIMUserProfile *)profile
 {
     NSString *ret = [super getSignature:profile];
@@ -55,6 +64,9 @@
     return @"暂无个性签名";
 }
 
+/**
+ *获取所在地
+ */
 - (NSString *)getLocation:(TIMUserProfile *)profile
 {
     NSString *ret = [super getLocation:profile];
@@ -99,6 +111,9 @@
     }];
 }
 
+/**
+ *初始化视图显示数据
+ */
 - (void)setupData
 {
 
@@ -171,6 +186,9 @@
     [self.tableView reloadData];
 }
 #pragma mark - Table view data source
+/**
+ *  tableView委托函数
+ */
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return _data.count;
@@ -229,6 +247,9 @@
     return nil;
 }
 
+/**
+ *点击用户信息卡片后出现的响应函数，提供修改昵称和修改签名的入口
+ */
 - (void)didSelectCommon
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
@@ -240,6 +261,9 @@
     [sheet showInView:self.view];
 }
 
+/**
+ *点击 修改昵称 后执行的函数，使用户能够修改自己的昵称
+ */
 - (void)didSelectChangeNick
 {
     TTextEditController *vc = [[TTextEditController alloc] initWithText:self.profile.nickname];
@@ -255,6 +279,9 @@
     }];
 }
 
+/**
+ *点击 修改个性签名 后执行的函数，使用户能够修改自己的个性签名
+ */
 - (void)didSelectChangeSignature
 {
     TTextEditController *vc = [[TTextEditController alloc] initWithText:[self.profile showSignature]];
@@ -271,6 +298,9 @@
     }];
 }
 
+/**
+ *点击 修改所在地 后执行的函数，使用户能够修改自己的所在地
+ */
 - (void)didSelectLocal
 {
     TTextEditController *vc = [[TTextEditController alloc] initWithText:[self.profile showLocation]];
@@ -286,6 +316,10 @@
     }];
 }
 
+/**
+ *点击 消息提醒 后执行的函数，使用户能够对消息提醒模式作出设置
+ *消息提醒视图可以阅读 NotifySetupController.m 详细了解
+ */
 - (void)didSelectNotifySet
 {
     [[TIMManager sharedInstance] getAPNSConfig:^(TIMAPNSConfig *config){
@@ -297,6 +331,9 @@
     }];
 }
 
+/**
+ *点击 生日 后执行的函数，使用户能够修改生日信息
+ */
 - (void)didSelectBirthday
 {
     TDateEditController *vc = [[TDateEditController alloc] initWithDate:[self.profile showBirthday]];
@@ -312,6 +349,9 @@
     }];
 }
 
+/**
+ *点击 生日 后执行的函数，使用户能够修改性别信息
+ */
 - (void)didSelectSex
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
@@ -324,6 +364,9 @@
     [sheet showInView:self.view];
 }
 
+/**
+ *点击 退出登录 后执行的函数，负责账户登出的操作
+ */
 - (void)logout:(TUIButtonCell *)cell
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确定退出吗" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -345,6 +388,9 @@
     }];
 }
 
+/**
+ *点击 好友申请 后执行的函数，使用户能够设置自己审核好友申请的程度
+ */
 - (void)onEditFriendApply
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] init];
@@ -357,6 +403,9 @@
     [sheet showInView:self.view];
 }
 
+/**
+ *点击具体某一表单后执行的动作，具体请参照上述函数
+ */
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (actionSheet.tag == SHEET_AGREE) {
@@ -389,6 +438,9 @@
     }
 }
 
+/**
+ *账户登出后执行的操作，默认回到登录界面
+ */
 - (void)didLogoutInSettingController:(SettingController *)controller
 {
     [[TUILocalStorage sharedInstance] logout];

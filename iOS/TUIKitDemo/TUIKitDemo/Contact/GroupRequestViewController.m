@@ -5,7 +5,12 @@
 //  Created by annidyfeng on 2019/5/20.
 //  Copyright © 2019年 Tencent. All rights reserved.
 //
-
+/** 腾讯云IM Demon群组加入页面，在用户想要加入群组时提供UI
+ *
+ * 本文件实现了加入群组时的视图，使得使用者能够对只能群组发送申请加入的请求
+ *
+ * 本类依赖于腾讯云 TUIKit和IMSDK 实现
+ */
 #import "GroupRequestViewController.h"
 #import "TIMUserProfile+DataProvider.h"
 #import "Toast/Toast.h"
@@ -26,6 +31,7 @@
 @implementation GroupRequestViewController
 
 - (void)viewDidLoad {
+    //初始化视图内容信息
     [super viewDidLoad];
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     [self.view addSubview:self.tableView];
@@ -51,6 +57,9 @@
     self.title = @"添加群组";
 }
 
+/**
+ *tableView委托函数
+ */
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     if (indexPath.section == 0) {
@@ -102,6 +111,9 @@
     return NO;
 }
 
+/**
+ *点击 发送 按钮后执行的函数，包括信息收集和请求回调
+ */
 - (void)onSend
 {
     // display toast with an activity spinner
